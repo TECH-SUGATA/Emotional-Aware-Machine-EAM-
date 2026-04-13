@@ -115,8 +115,8 @@ open index.html
 ## 👨‍💻 Author
 
 **Sugata Nayak**
-🔗 Portfolio: https://tech-sugata.github.io/Emotional-Aware-Machine-EAM-/
-🔗 GitHub: https://github.com/
+🔗 Portfolio: https://tech-sugata.github.io/PORTFOLIO/
+🔗 GitHub: https://github.com/TECH-SUGATA
 
 ---
 
