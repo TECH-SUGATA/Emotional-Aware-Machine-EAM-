@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>The Mirror — EAM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #04060f;
+  --bg2: #080d1a;
+  --bg3: #0d1526;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --cyan: #00e5ff;
+  --magenta: #ff2d78;
+  --violet: #bf5fff;
+  --amber: #ffb347;
+  --green: #00f5a0;
+  --text: #f0f4ff;
+  --text2: #8892aa;
+  --text3: #4a5570;
+  --font-d: 'Outfit', sans-serif;
+  --font-b: 'Plus Jakarta Sans', sans-serif;
+  --r: 16px;
+  --r2: 24px;
+  --r3: 40px;
+  --transition: 0.48s cubic-bezier(0.4,0,0.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-b);
+  min-height:100dvh;
+  overflow:hidden;
+  position:relative;
+}
+.material-symbols-outlined{
+  font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+  user-select:none;
+  line-height:1;
+}
+.fill1{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+
+/* ───── CANVAS BG ───── */
+#bg-canvas{
+  position:fixed;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;
+}
+
+/* ───── PAGES ───── */
+.app{position:relative;z-index:1;width:100%;height:100dvh;overflow:hidden}
+.page{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  overflow-y:auto;overflow-x:hidden;
+  padding:24px 20px 40px;
+  opacity:0;pointer-events:none;
+  transform:translateY(32px) scale(0.98);
+  transition:opacity var(--transition), transform var(--transition);
+  -webkit-overflow-scrolling:touch;
+}
+.page.active{
+  opacity:1;pointer-events:all;
+  transform:translateY(0) scale(1);
+}
+.page.exit{
+  opacity:0;pointer-events:none;
+  transform:translateY(-24px) scale(1.01);
+}
+
+/* ───── SCROLLBAR ───── */
+.page::-webkit-scrollbar{width:4px}
+.page::-webkit-scrollbar-track{background:transparent}
+.page::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
+
+/* ───── GLASS ───── */
+.glass{
+  background:var(--surface);
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  border:1px solid var(--border);
+}
+.glass2{
+  background:var(--surface2);
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  border:1px solid var(--border2);
+}
+
+/* ───── CARD ───── */
+.card{border-radius:var(--r2);padding:32px}
+
+/* ───── BUTTONS ───── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-family:var(--font-d);font-weight:600;font-size:16px;
+  border:none;cursor:pointer;border-radius:99px;
+  padding:16px 32px;width:100%;
+  transition:all 0.3s ease;
+  position:relative;overflow:hidden;
+  letter-spacing:-0.01em;
+}
+.btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent 60%);
+  opacity:0;transition:opacity 0.3s;
+}
+.btn:hover::after{opacity:1}
+.btn:active{transform:scale(0.97)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  color:#000;
+  box-shadow:0 0 40px rgba(0,229,255,0.25),0 4px 24px rgba(191,95,255,0.2);
+}
+.btn-primary:hover{
+  box-shadow:0 0 60px rgba(0,229,255,0.4),0 8px 32px rgba(191,95,255,0.3);
+  transform:translateY(-2px);
+}
+.btn-secondary{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  color:var(--text);
+  backdrop-filter:blur(20px);
+}
+.btn-secondary:hover{background:var(--surface2);border-color:rgba(255,255,255,0.22)}
+.btn-ghost{
+  background:transparent;border:1px solid var(--border2);
+  color:var(--text2);
+  backdrop-filter:blur(12px);
+}
+.btn-spotify{
+  background:linear-gradient(135deg,rgba(30,215,96,0.15),rgba(30,215,96,0.05));
+  border:1px solid rgba(30,215,96,0.3);
+  color:#1ed760;
+}
+.btn-spotify:hover{background:linear-gradient(135deg,rgba(30,215,96,0.22),rgba(30,215,96,0.1))}
+.btn-magenta{
+  background:linear-gradient(135deg,var(--magenta),var(--violet));
+  color:#fff;
+  box-shadow:0 0 40px rgba(255,45,120,0.25);
+}
+.btn-magenta:hover{box-shadow:0 0 60px rgba(255,45,120,0.4);transform:translateY(-2px)}
+.btn-sm{padding:12px 24px;font-size:14px}
+
+/* ───── INPUTS ───── */
+.field{margin-bottom:20px}
+.field label{
+  display:block;font-family:var(--font-d);font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text2);
+  margin-bottom:8px;padding-left:4px;
+}
+.input-wrap{
+  position:relative;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  transition:all 0.3s ease;
+}
+.input-wrap:focus-within{
+  border-color:rgba(0,229,255,0.4);
+  background:rgba(0,229,255,0.04);
+  box-shadow:0 0 0 4px rgba(0,229,255,0.06);
+}
+.input-wrap .icon{
+  position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  color:var(--text3);font-size:20px;
+  transition:color 0.3s;
+}
+.input-wrap:focus-within .icon{color:var(--cyan)}
+.input-wrap input{
+  width:100%;background:transparent;border:none;outline:none;
+  font-family:var(--font-b);font-size:15px;color:var(--text);
+  padding:16px 16px 16px 48px;
+}
+.input-wrap input::placeholder{color:var(--text3)}
+.input-wrap .eye{
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  color:var(--text3);cursor:pointer;font-size:20px;
+  transition:color 0.3s;
+}
+.input-wrap .eye:hover{color:var(--text2)}
+.input-wrap.no-icon input{padding-left:16px}
+
+/* ───── DIVIDER ───── */
+.divider{
+  display:flex;align-items:center;gap:16px;
+  color:var(--text3);font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  margin:4px 0;
+}
+.divider::before,.divider::after{
+  content:'';flex:1;height:1px;
+  background:var(--border);
+}
+
+/* ───── LINK ───── */
+.link{color:var(--cyan);font-weight:600;cursor:pointer;text-decoration:none;transition:color 0.2s}
+.link:hover{color:#fff}
+.link-magenta{color:var(--magenta)}
+.link-magenta:hover{color:#fff}
+
+/* ───── PAGE HEADER ───── */
+.page-header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:max(16px,env(safe-area-inset-top)) 20px 16px;
+  background:linear-gradient(to bottom,rgba(4,6,15,0.9),transparent);
+  backdrop-filter:blur(0);
+}
+.icon-btn{
+  width:42px;height:42px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1px solid var(--border);
+  cursor:pointer;transition:all 0.2s;color:var(--text2);
+  font-size:22px;
+}
+.icon-btn:hover{background:var(--surface2);color:var(--text)}
+
+/* ───── BOTTOM NAV ───── */
+#bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(8,13,26,0.85);
+  backdrop-filter:blur(28px);
+  -webkit-backdrop-filter:blur(28px);
+  border-top:1px solid var(--border);
+  padding:8px 0 max(16px,env(safe-area-inset-bottom));
+  display:none;
+}
+#bottom-nav.visible{display:block}
+.nav-items{
+  display:flex;justify-content:space-around;align-items:center;
+  max-width:480px;margin:0 auto;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;
+  gap:4px;cursor:pointer;padding:8px 16px;
+  border-radius:var(--r);transition:all 0.2s;
+  flex:1;color:var(--text3);
+}
+.nav-item.active{color:var(--cyan)}
+.nav-item span.material-symbols-outlined{font-size:24px}
+.nav-item .nav-label{font-family:var(--font-d);font-size:10px;font-weight:600;letter-spacing:.06em}
+.nav-center-btn{
+  width:54px;height:54px;border-radius:50%;margin-top:-20px;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  box-shadow:0 0 30px rgba(0,229,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#000;font-size:26px;
+  transition:all 0.3s;border:3px solid var(--bg);
+}
+.nav-center-btn:hover{transform:scale(1.1);box-shadow:0 0 50px rgba(0,229,255,0.5)}
+
+/* ════════════════════════════════
+   PAGE 0 — SPLASH
+════════════════════════════════ */
+#page-splash{background:transparent}
+.splash-orb-wrap{position:relative;width:220px;height:220px;margin-bottom:40px}
+.orb-ring{
+  position:absolute;border-radius:50%;
+  border:1px solid;animation:orbit linear infinite;
+}
+.orb-ring:nth-child(1){
+  inset:-20px;border-color:rgba(0,229,255,0.15);
+  animation-duration:8s;
+}
+.orb-ring:nth-child(2){
+  inset:-40px;border-color:rgba(191,95,255,0.1);
+  animation-duration:13s;animation-direction:reverse;
+}
+.orb-ring:nth-child(3){
+  inset:-60px;border-color:rgba(255,45,120,0.07);
+  animation-duration:18s;
+}
+@keyframes orbit{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.orb-core{
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#00e5ff 0%,#7b2fff 50%,#ff2d78 100%);
+  box-shadow:
+    0 0 80px rgba(0,229,255,0.4),
+    0 0 160px rgba(191,95,255,0.25),
+    inset 0 0 60px rgba(255,255,255,0.12);
+  animation:orb-breathe 4s ease-in-out infinite;
+  position:relative;overflow:hidden;
+}
+.orb-core::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 25% 25%,rgba(255,255,255,0.25),transparent 60%);
+  animation:orb-shimmer 3s ease-in-out infinite alternate;
+}
+@keyframes orb-breathe{
+  0%,100%{transform:scale(1);box-shadow:0 0 80px rgba(0,229,255,0.4),0 0 160px rgba(191,95,255,0.25)}
+  50%{transform:scale(1.06);box-shadow:0 0 120px rgba(0,229,255,0.6),0 0 200px rgba(191,95,255,0.35)}
+}
+@keyframes orb-shimmer{
+  from{opacity:0.4}to{opacity:0.9}
+}
+.splash-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-d);font-size:11px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);
+  background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);
+  border-radius:99px;padding:8px 16px;margin-bottom:20px;
+}
+.splash-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.3}}
+.splash-h1{
+  font-family:var(--font-d);font-size:clamp(40px,10vw,60px);font-weight:800;
+  line-height:1.0;letter-spacing:-0.03em;text-align:center;
+  background:linear-gradient(135deg,#fff 0%,var(--cyan) 50%,var(--violet) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:12px;
+}
+.splash-sub{
+  text-align:center;color:var(--text2);font-size:16px;line-height:1.6;
+  max-width:320px;margin-bottom:48px;
+}
+.splash-actions{width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px}
+.splash-note{text-align:center;font-size:13px;color:var(--text3);margin-top:8px}
+
+/* ════════════════════════════════
+   PAGE 1 — LOGIN
+════════════════════════════════ */
+.auth-wrap{width:100%;max-width:400px}
+.auth-logo{
+  display:flex;align-items:center;gap:12px;margin-bottom:40px;
+  justify-content:center;
+}
+.auth-logo-orb{
+  width:44px;height:44px;border-radius:50%;
+  background:radial-gradient(135deg,var(--cyan),var(--violet));
+  box-shadow:0 0 24px rgba(0,229,255,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:#000;
+}
+.auth-logo-name{
+  font-family:var(--font-d);font-size:22px;font-weight:800;
+  background:linear-gradient(90deg,var(--text),var(--text2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-0.02em;
+}
+.auth-h2{
+  font-family:var(--font-d);font-size:32px;font-weight:700;
+  letter-spacing:-0.02em;line-height:1.1;margin-bottom:8px;
+}
+.auth-sub{color:var(--text2);font-size:14px;margin-bottom:32px;line-height:1.5}
+.auth-footer{text-align:center;margin-top:28px;font-size:14px;color:var(--text2)}
+.forgot-link{
+  font-size:12px;font-weight:600;text-align:right;
+  color:var(--cyan);cursor:pointer;letter-spacing:.04em;
+  margin-bottom:20px;display:block;text-align:right;
+}
+
+/* ════════════════════════════════
+   PAGE 2 — SIGN UP
+════════════════════════════════ */
+.strength-bar{
+  display:flex;gap:4px;margin-top:8px;height:3px;
+}
+.strength-bar span{
+  flex:1;border-radius:99px;background:var(--border);
+  transition:background 0.4s;
+}
+.strength-bar span.active-w{background:var(--magenta)}
+.strength-bar span.active-m{background:var(--amber)}
+.strength-bar span.active-s{background:var(--green)}
+
+/* ════════════════════════════════
+   PAGE 3 — ONBOARDING
+════════════════════════════════ */
+.onboard-slides{
+  display:flex;width:300%;
+  transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.onboard-slide{
+  width:calc(100%/3);display:flex;flex-direction:column;
+  align-items:center;padding:0 20px;
+}
+.onboard-icon-wrap{
+  width:100px;height:100px;border-radius:50%;margin-bottom:32px;
+  display:flex;align-items:center;justify-content:center;font-size:44px;
+  position:relative;
+}
+.onboard-icon-wrap::after{
+  content:'';position:absolute;inset:-1px;border-radius:50%;
+  border:1px solid var(--border2);
+}
+.dots{display:flex;gap:8px;margin-bottom:32px}
+.dot{
+  width:8px;height:8px;border-radius:99px;
+  background:var(--border2);transition:all 0.3s;cursor:pointer;
+}
+.dot.active{background:var(--cyan);width:24px}
+.onboard-h{
+  font-family:var(--font-d);font-size:26px;font-weight:700;
+  letter-spacing:-0.02em;text-align:center;margin-bottom:12px;
+}
+.onboard-p{font-size:15px;color:var(--text2);text-align:center;line-height:1.65;max-width:300px}
+
+/* ════════════════════════════════
+   PAGE 4 — SCANNER
+════════════════════════════════ */
+.scanner-wrap{position:relative;width:240px;height:240px;margin:0 auto 32px}
+.scanner-ring{
+  position:absolute;border-radius:50%;border:2px dashed;
+  animation:spin-ring linear infinite;
+}
+.scanner-ring:nth-child(1){
+  inset:-16px;border-color:rgba(0,229,255,0.2);
+  animation-duration:10s;
+}
+.scanner-ring:nth-child(2){
+  inset:-32px;border-color:rgba(191,95,255,0.15);
+  animation-duration:15s;animation-direction:reverse;
+}
+@keyframes spin-ring{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.scanner-orb{
+  width:240px;height:240px;border-radius:50%;overflow:hidden;
+  position:relative;
+  border:2px solid rgba(0,229,255,0.25);
+  box-shadow:0 0 60px rgba(0,229,255,0.2),inset 0 0 40px rgba(0,229,255,0.06);
+}
+.scanner-orb-bg{
+  width:100%;height:100%;
+  background:radial-gradient(circle at 40% 30%,rgba(0,229,255,0.3) 0%,rgba(191,95,255,0.25) 50%,rgba(8,13,26,0.9) 100%);
+}
+.scan-line{
+  position:absolute;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(0,229,255,0.8),transparent);
+  box-shadow:0 0 20px rgba(0,229,255,0.6);
+  animation:scan-sweep 2.5s ease-in-out infinite;
+  top:0;
+}
+@keyframes scan-sweep{
+  0%{top:0;opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{top:100%;opacity:0}
+}
+.scanner-badge{
+  position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:99px;padding:6px 16px;white-space:nowrap;
+  font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);
+}
+.scanner-dot{width:8px;height:8px;border-radius:50%;background:var(--green);position:relative}
+.scanner-dot::after{
+  content:'';position:absolute;inset:-3px;border-radius:50%;
+  background:rgba(0,245,160,0.3);animation:pulse-ring 1.5s infinite;
+}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:0.7}100%{transform:scale(1.8);opacity:0}}
+
+.emotion-card{
+  border-radius:var(--r2);
+  padding:20px 22px;margin-bottom:12px;
+  background:var(--surface);border:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.emotion-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--ec-c1,transparent),transparent 60%);
+  opacity:0.06;pointer-events:none;
+}
+.emotion-card .ec-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.emotion-card .ec-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.emotion-card .ec-val{font-family:var(--font-d);font-size:28px;font-weight:700;color:var(--ec-color,var(--cyan))}
+.emotion-card .ec-name{font-family:var(--font-d);font-size:18px;font-weight:600;margin-bottom:10px}
+.ec-bar-bg{height:6px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden}
+.ec-bar-fill{height:100%;border-radius:99px;transition:width 1.5s cubic-bezier(0.4,0,0.2,1)}
+.ec-sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ec-sub-item{
+  padding:12px 14px;border-radius:var(--r);
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+}
+.ec-sub-item .s-label{font-size:11px;color:var(--text3);margin-bottom:6px}
+.ec-sub-item .s-val{font-family:var(--font-d);font-size:18px;font-weight:700}
+
+/* ════════════════════════════════
+   PAGE 5 — MUSIC
+════════════════════════════════ */
+.music-hero{
+  width:100%;border-radius:var(--r2);overflow:hidden;
+  padding:24px;margin-bottom:20px;position:relative;
+  background:linear-gradient(135deg,rgba(0,229,255,0.1),rgba(191,95,255,0.1));
+  border:1px solid var(--border);
+}
+.music-hero-tag{
+  font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;gap:6px;
+}
+.music-hero-h{
+  font-family:var(--font-d);font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px;
+}
+.music-hero-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
+.now-playing{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(0,0,0,0.3);border-radius:var(--r);padding:14px;
+}
+.np-art{
+  width:52px;height:52px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;overflow:hidden;position:relative;
+}
+.np-art img{width:100%;height:100%;object-fit:cover}
+.np-info{flex:1;min-width:0}
+.np-title{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.np-artist{font-size:12px;color:var(--text2)}
+.np-controls{display:flex;align-items:center;gap:8px}
+.ctrl-btn{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.2s;font-size:20px;color:var(--text2);
+}
+.ctrl-btn:hover{background:var(--surface2);color:var(--text)}
+.ctrl-btn.play{
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  color:#000;width:40px;height:40px;font-size:22px;
+  box-shadow:0 0 20px rgba(0,229,255,0.3);
+}
+.ctrl-btn.play:hover{box-shadow:0 0 35px rgba(0,229,255,0.5)}
+
+.progress-wrap{margin-top:12px;padding:0 14px 0}
+.progress-bar{
+  height:3px;border-radius:99px;background:rgba(255,255,255,0.1);
+  cursor:pointer;margin-bottom:6px;overflow:hidden;
+}
+.progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--violet));width:35%}
+.progress-times{display:flex;justify-content:space-between;font-size:11px;color:var(--text3)}
+
+.track-list-title{
+  font-family:var(--font-d);font-size:13px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text3);
+  margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;
+}
+.track-list-title a{color:var(--cyan);text-transform:none;letter-spacing:0;font-size:12px;cursor:pointer}
+.track-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px;border-radius:var(--r);
+  cursor:pointer;transition:all 0.2s;
+  border:1px solid transparent;
+}
+.track-item:hover{background:var(--surface);border-color:var(--border)}
+.track-item.active{background:rgba(0,229,255,0.06);border-color:rgba(0,229,255,0.2)}
+.track-num{
+  width:24px;text-align:center;font-size:13px;
+  color:var(--text3);font-family:var(--font-d);
+  flex-shrink:0;
+}
+.track-item.active .track-num{color:var(--cyan)}
+.track-art{
+  width:44px;height:44px;border-radius:10px;flex-shrink:0;overflow:hidden;
+  position:relative;
+}
+.track-art-bg{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+.track-info{flex:1;min-width:0}
+.track-title{font-size:14px;font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-artist{font-size:12px;color:var(--text2)}
+.track-dur{font-size:12px;color:var(--text3);flex-shrink:0;font-family:var(--font-d)}
+.track-like{
+  flex-shrink:0;color:var(--text3);font-size:18px;
+  cursor:pointer;transition:color 0.2s;padding:4px;
+}
+.track-like.liked{color:var(--magenta)}
+.track-like:hover{color:var(--text)}
+
+.mood-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;
+  background:var(--surface);border:1px solid var(--border);
+  cursor:pointer;transition:all 0.2s;color:var(--text2);
+  white-space:nowrap;
+}
+.mood-chip.active,.mood-chip:hover{
+  background:rgba(0,229,255,0.1);border-color:rgba(0,229,255,0.3);color:var(--cyan);
+}
+.mood-chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;scrollbar-width:none}
+.mood-chips::-webkit-scrollbar{display:none}
+
+/* ════════════════════════════════
+   TOAST
+════════════════════════════════ */
+#toast{
+  position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-120%);
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:var(--r);padding:12px 20px;
+  font-size:14px;font-weight:500;color:var(--text);
+  z-index:9999;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ════════════════════════════════
+   ANIMATIONS
+════════════════════════════════ */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.anim-stagger > *{opacity:0;animation:fadeUp 0.5s ease forwards}
+.anim-stagger > *:nth-child(1){animation-delay:0.05s}
+.anim-stagger > *:nth-child(2){animation-delay:0.12s}
+.anim-stagger > *:nth-child(3){animation-delay:0.19s}
+.anim-stagger > *:nth-child(4){animation-delay:0.26s}
+.anim-stagger > *:nth-child(5){animation-delay:0.33s}
+.anim-stagger > *:nth-child(6){animation-delay:0.40s}
+.anim-stagger > *:nth-child(7){animation-delay:0.47s}
+.anim-stagger > *:nth-child(8){animation-delay:0.54s}
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media(min-width:768px){
+  .page{padding:40px 24px 60px}
+  .auth-wrap{max-width:440px}
+  .card{padding:40px}
+  .splash-h1{font-size:68px}
+}
+@media(min-width:1024px){
+  body{display:flex;align-items:center;justify-content:center}
+  .app{
+    width:390px;height:844px;
+    border-radius:40px;overflow:hidden;
+    box-shadow:0 40px 100px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.1);
+    position:relative;
+  }
+  #bg-canvas{position:fixed}
+  .page-header{border-radius:0}
+  #bottom-nav{border-radius:0 0 40px 40px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="app">
+
+  <!-- PAGE 0 — SPLASH -->
+  <div class="page active" id="page-splash">
+    <div class="anim-stagger" style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:340px">
+      <div class="splash-orb-wrap">
+        <div class="orb-ring"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-core"></div>
+      </div>
+      <div class="splash-tag">
+        <span></span> Emotional AI Mirror
+      </div>
+      <h1 class="splash-h1">Feel the<br/>Frequency</h1>
+      <p class="splash-sub">Your AI companion that reads your emotions and curates the perfect musical universe for your soul.</p>
+      <div class="splash-actions">
+        <button class="btn btn-primary" onclick="navigate('login')">
+          <span class="material-symbols-outlined fill1">auto_awesome</span>
+          Get Started
+        </button>
+        <button class="btn btn-secondary" onclick="navigate('login')">
+          <span class="material-symbols-outlined">login</span>
+          Sign In
+        </button>
+      </div>
+      <p class="splash-note" style="margin-top:20px">By continuing, you agree to our <span class="link">Terms</span> &amp; <span class="link">Privacy</span></p>
+    </div>
+  </div>
+
+  <!-- PAGE 1 — LOGIN -->
+  <div class="page" id="page-login">
+    <div class="auth-wrap anim-stagger">
+      <div class="auth-logo">
+        <div class="auth-logo-orb">
+          <span class="material-symbols-outlined fill1">flare</span>
+        </div>
+        <span class="auth-logo-name">The Mirror</span>
+      </div>
+      <h2 class="auth-h2">Welcome back</h2>
+      <p class="auth-sub">Step back into your reflection</p>
+
+      <div class="field">
+        <label>Email Address</label>
+        <div class="input-wrap">
+          <span class="material-symbols-outlined icon">alternate_email</span>
+          <input type="email" id="login-email" placeholder="you@mirror.ai" autocomplete="email"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap" id="pw-wrap">
+          <span class="material-symbols-outlined icon">lock</span>
+          <input type="password" id="login-pw" placeholder="••••••••" autocomplete="current-password"/>
+          <span class="material-symbols-outlined eye" onclick="togglePw('login-pw',this)">visibility</span>
+        </div>
+      </div>
+
+      <span class="forgot-link">Forgot password?</span>
+
+      <button class="btn btn-primary" onclick="handleLogin()">
+        Sign In
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+
+      <div class="divider" style="margin:20px 0">or</div>
+
+      <button class="btn btn-spotify" onclick="showToast('Connecting to Spotify...')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1ed760"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Continue with Spotify
+      </button>
+
+      <div class="auth-footer">
+        Don't have an account?
+        <span class="link" onclick="navigate('signup')" style="margin-left:4px">Sign Up</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2 — SIGN UP -->
+  <div class="page" id="page-signup">
+    <div class="auth-wrap anim-stagger">
+      <div class="auth-logo">
+        <div class="auth-logo-orb">
+          <span class="material-symbols-outlined fill1">flare</span>
+        </div>
+        <span class="auth-logo-name">The Mirror</span>
+      </div>
+      <h2 class="auth-h2">Begin your<br/>reflection</h2>
+      <p class="auth-sub">Sync your soul with the digital mirror</p>
+
+      <div class="field">
+        <label>Full Name</label>
+        <div class="input-wrap">
+          <span class="material-symbols-outlined icon">person</span>
+          <input type="text" placeholder="Avery Sterling" autocomplete="name"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email Address</label>
+        <div class="input-wrap">
+          <span class="material-symbols-outlined icon">alternate_email</span>
+          <input type="email" placeholder="avery@mirror.ai" autocomplete="email"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrap" id="su-pw-wrap">
+          <span class="material-symbols-outlined icon">lock</span>
+          <input type="password" id="signup-pw" placeholder="Create a strong password" oninput="updateStrength(this.value)"/>
+          <span class="material-symbols-outlined eye" onclick="togglePw('signup-pw',this)">visibility</span>
+        </div>
+        <div class="strength-bar" id="strength-bar">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <button class="btn btn-magenta" style="margin-bottom:16px" onclick="navigate('onboard')">
+        Create Account
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+
+      <button class="btn btn-spotify" onclick="showToast('Connecting to Spotify...')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1ed760"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Connect Spotify Instead
+      </button>
+
+      <div class="auth-footer">
+        Already have an account?
+        <span class="link" onclick="navigate('login')" style="margin-left:4px">Sign In</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3 — ONBOARDING -->
+  <div class="page" id="page-onboard">
+    <div style="width:100%;max-width:380px;overflow:hidden">
+      <div class="onboard-slides" id="onboard-slides">
+
+        <!-- Slide 1 -->
+        <div class="onboard-slide">
+          <div class="onboard-icon-wrap" style="background:radial-gradient(135deg,rgba(0,229,255,0.15),rgba(191,95,255,0.1))">
+            <span class="material-symbols-outlined fill1" style="color:var(--cyan);font-size:48px">psychology</span>
+          </div>
+          <h3 class="onboard-h">Read Your Emotions</h3>
+          <p class="onboard-p">Our advanced AI analyzes your facial expressions and biometric signals to understand exactly how you feel in real-time.</p>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="onboard-slide">
+          <div class="onboard-icon-wrap" style="background:radial-gradient(135deg,rgba(191,95,255,0.15),rgba(255,45,120,0.1))">
+            <span class="material-symbols-outlined fill1" style="color:var(--violet);font-size:48px">queue_music</span>
+          </div>
+          <h3 class="onboard-h">Curate Your Soundtrack</h3>
+          <p class="onboard-p">We sync with your Spotify to generate personalized playlists that perfectly match your emotional state right now.</p>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="onboard-slide">
+          <div class="onboard-icon-wrap" style="background:radial-gradient(135deg,rgba(255,179,71,0.15),rgba(0,245,160,0.1))">
+            <span class="material-symbols-outlined fill1" style="color:var(--amber);font-size:48px">insights</span>
+          </div>
+          <h3 class="onboard-h">Grow With Insight</h3>
+          <p class="onboard-p">Track your emotional journey over time. Discover patterns, celebrate growth, and understand yourself deeper every day.</p>
+        </div>
+
+      </div>
+
+      <div class="dots" style="justify-content:center">
+        <div class="dot active" onclick="goSlide(0)"></div>
+        <div class="dot" onclick="goSlide(1)"></div>
+        <div class="dot" onclick="goSlide(2)"></div>
+      </div>
+
+      <button class="btn btn-primary" id="onboard-btn" onclick="onboardNext()">
+        Continue
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+      <button class="btn btn-ghost" style="margin-top:12px" onclick="navigate('scanner')">
+        Skip for now
+      </button>
+    </div>
+  </div>
+
+  <!-- PAGE 4 — SCANNER -->
+  <div class="page" id="page-scanner" style="padding-top:80px;padding-bottom:100px">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="icon-btn" onclick="navigate('onboard')">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </div>
+      <span style="font-family:var(--font-d);font-weight:600;font-size:16px">EAM Scanner</span>
+      <div class="icon-btn" onclick="showToast('Settings coming soon')">
+        <span class="material-symbols-outlined">tune</span>
+      </div>
+    </div>
+
+    <div style="width:100%;max-width:400px">
+      <div class="anim-stagger">
+        <!-- Scanner visual -->
+        <div class="scanner-wrap">
+          <div class="scanner-ring"></div>
+          <div class="scanner-ring"></div>
+          <div class="scanner-orb">
+            <div class="scanner-orb-bg"></div>
+            <div class="scan-line"></div>
+          </div>
+          <div class="scanner-badge">
+            <div class="scanner-dot"></div>
+            Analyzing
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-bottom:28px;padding-top:8px">
+          <h2 style="font-family:var(--font-d);font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px">Current Mood</h2>
+          <p style="color:var(--text2);font-size:13px">Real-time biometric analysis active</p>
+        </div>
+
+        <!-- Primary emotion -->
+        <div class="emotion-card" style="--ec-c1:var(--cyan);--ec-color:var(--cyan)">
+          <div class="ec-head">
+            <div>
+              <div class="ec-label">Dominant State</div>
+              <div class="ec-name">✨ Joy &amp; Elation</div>
+            </div>
+            <div class="ec-val">82%</div>
+          </div>
+          <div class="ec-bar-bg">
+            <div class="ec-bar-fill" style="width:82%;background:linear-gradient(90deg,var(--cyan),var(--violet))"></div>
+          </div>
+          <p style="font-size:11px;color:var(--text3);margin-top:6px;text-align:right">High confidence — 94%</p>
+        </div>
+
+        <!-- Sub emotions -->
+        <div class="ec-sub-grid">
+          <div class="ec-sub-item">
+            <div class="s-label">🌿 Calm</div>
+            <div class="s-val" style="color:var(--green)">15%</div>
+            <div class="ec-bar-bg" style="margin-top:6px">
+              <div class="ec-bar-fill" style="width:15%;background:var(--green)"></div>
+            </div>
+          </div>
+          <div class="ec-sub-item">
+            <div class="s-label">🔮 Focus</div>
+            <div class="s-val" style="color:var(--violet)">46%</div>
+            <div class="ec-bar-bg" style="margin-top:6px">
+              <div class="ec-bar-fill" style="width:46%;background:var(--violet)"></div>
+            </div>
+          </div>
+          <div class="ec-sub-item">
+            <div class="s-label">⚡ Energy</div>
+            <div class="s-val" style="color:var(--amber)">64%</div>
+            <div class="ec-bar-bg" style="margin-top:6px">
+              <div class="ec-bar-fill" style="width:64%;background:var(--amber)"></div>
+            </div>
+          </div>
+          <div class="ec-sub-item">
+            <div class="s-label">💫 Inspired</div>
+            <div class="s-val" style="color:var(--magenta)">71%</div>
+            <div class="ec-bar-bg" style="margin-top:6px">
+              <div class="ec-bar-fill" style="width:71%;background:var(--magenta)"></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top:20px" onclick="navigate('music')">
+          <span class="material-symbols-outlined fill1">queue_music</span>
+          Find My Soundtrack
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 5 — MUSIC -->
+  <div class="page" id="page-music" style="padding-top:80px;padding-bottom:110px">
+    <div class="page-header">
+      <div class="icon-btn" onclick="navigate('scanner')">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </div>
+      <span style="font-family:var(--font-d);font-weight:600;font-size:16px">Your Soundtrack</span>
+      <div class="icon-btn" onclick="showToast('Library saved!')">
+        <span class="material-symbols-outlined">bookmark</span>
+      </div>
+    </div>
+
+    <div style="width:100%;max-width:400px">
+      <div class="anim-stagger">
+
+        <!-- Hero now playing -->
+        <div class="music-hero">
+          <div class="music-hero-tag">
+            <span class="scanner-dot" style="position:relative;display:inline-block;width:8px;height:8px"></span>
+            Now Playing · Mood Match
+          </div>
+          <div class="music-hero-h" id="np-hero-title">Blinding Lights</div>
+          <div class="music-hero-sub" id="np-hero-artist">The Weeknd · Upbeat Euphoria</div>
+
+          <div class="now-playing">
+            <div class="np-art" style="background:linear-gradient(135deg,#ff2d78,#bf5fff)">
+              <span class="material-symbols-outlined fill1" style="color:#fff;font-size:24px">music_note</span>
+            </div>
+            <div class="np-info">
+              <div class="np-title" id="np-title-small">Blinding Lights</div>
+              <div class="np-artist" id="np-artist-small">The Weeknd</div>
+            </div>
+            <div class="np-controls">
+              <div class="ctrl-btn" onclick="prevTrack()">
+                <span class="material-symbols-outlined fill1">skip_previous</span>
+              </div>
+              <div class="ctrl-btn play" id="play-btn" onclick="togglePlay()">
+                <span class="material-symbols-outlined fill1">pause</span>
+              </div>
+              <div class="ctrl-btn" onclick="nextTrack()">
+                <span class="material-symbols-outlined fill1">skip_next</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-times">
+              <span id="time-cur">1:24</span>
+              <span id="time-tot">4:02</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mood chips -->
+        <div class="mood-chips">
+          <div class="mood-chip active" onclick="filterMood(this,'all')">🎵 All</div>
+          <div class="mood-chip" onclick="filterMood(this,'upbeat')">✨ Upbeat</div>
+          <div class="mood-chip" onclick="filterMood(this,'chill')">🌿 Chill</div>
+          <div class="mood-chip" onclick="filterMood(this,'focus')">🔮 Focus</div>
+          <div class="mood-chip" onclick="filterMood(this,'energy')">⚡ Energy</div>
+        </div>
+
+        <!-- Track list -->
+        <div class="track-list-title">
+          Curated for Joy
+          <a onclick="showToast('Playlist saved to Spotify!')">Save All</a>
+        </div>
+
+        <div id="track-list">
+          <!-- Tracks injected by JS -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav id="bottom-nav">
+    <div class="nav-items">
+      <div class="nav-item" id="nav-home" onclick="navigate('scanner')">
+        <span class="material-symbols-outlined">home</span>
+        <span class="nav-label">Home</span>
+      </div>
+      <div class="nav-item" id="nav-scan" onclick="navigate('scanner')">
+        <div class="nav-center-btn">
+          <span class="material-symbols-outlined fill1">face</span>
+        </div>
+        <span class="nav-label" style="margin-top:4px">Scan</span>
+      </div>
+      <div class="nav-item" id="nav-music" onclick="navigate('music')">
+        <span class="material-symbols-outlined">headphones</span>
+        <span class="nav-label">Music</span>
+      </div>
+    </div>
+  </nav>
+
+</div><!-- .app -->
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+/* ════════════════════════════════
+   ANIMATED BACKGROUND CANVAS
+════════════════════════════════ */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W,H,particles=[];
+
+function resizeCanvas(){
+  W=canvas.width=window.innerWidth;
+  H=canvas.height=window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+
+const COLORS=['rgba(0,229,255,','rgba(191,95,255,','rgba(255,45,120,','rgba(255,179,71,','rgba(0,245,160,'];
+class Particle{
+  constructor(){this.reset(true)}
+  reset(init){
+    this.x=Math.random()*W;
+    this.y=init?Math.random()*H:H+20;
+    this.vx=(Math.random()-0.5)*0.4;
+    this.vy=-(Math.random()*0.8+0.2);
+    this.alpha=0;
+    this.maxAlpha=Math.random()*0.5+0.1;
+    this.size=Math.random()*2+0.5;
+    this.color=COLORS[Math.floor(Math.random()*COLORS.length)];
+    this.life=0;
+    this.maxLife=Math.random()*300+200;
+  }
+  update(){
+    this.x+=this.vx;this.y+=this.vy;
+    this.life++;
+    const t=this.life/this.maxLife;
+    this.alpha=t<0.1?this.maxAlpha*(t/0.1):t>0.7?this.maxAlpha*(1-(t-0.7)/0.3):this.maxAlpha;
+    if(this.life>=this.maxLife)this.reset(false);
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fillStyle=this.color+this.alpha+')';
+    ctx.fill();
+  }
+}
+for(let i=0;i<80;i++)particles.push(new Particle());
+
+// Aurora blobs
+const blobs=[
+  {x:0.15,y:0.1,r:0.35,c:'rgba(0,229,255,0.07)',vx:0.0003,vy:0.0002,phase:0},
+  {x:0.8,y:0.85,r:0.3,c:'rgba(191,95,255,0.06)',vx:-0.0002,vy:-0.0003,phase:1},
+  {x:0.5,y:0.4,r:0.25,c:'rgba(255,45,120,0.05)',vx:0.0004,vy:-0.0001,phase:2},
+];
+
+let raf;
+function drawBg(){
+  ctx.clearRect(0,0,W,H);
+
+  // aurora blobs
+  const t=Date.now()/1000;
+  blobs.forEach(b=>{
+    const bx=(b.x+Math.sin(t*b.vx*1000+b.phase)*0.1)*W;
+    const by=(b.y+Math.cos(t*b.vy*1000+b.phase)*0.08)*H;
+    const br=b.r*Math.max(W,H);
+    const g=ctx.createRadialGradient(bx,by,0,bx,by,br);
+    g.addColorStop(0,b.c);
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g;
+    ctx.beginPath();
+    ctx.arc(bx,by,br,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  // particles
+  particles.forEach(p=>{p.update();p.draw()});
+
+  raf=requestAnimationFrame(drawBg);
+}
+drawBg();
+
+/* ════════════════════════════════
+   NAVIGATION
+════════════════════════════════ */
+const navPages=['scanner','music'];
+const bottomNavEl=document.getElementById('bottom-nav');
+
+function navigate(pageId){
+  const current=document.querySelector('.page.active');
+  const next=document.getElementById('page-'+pageId);
+  if(!next||current===next)return;
+
+  current.classList.add('exit');
+  setTimeout(()=>current.classList.remove('active','exit'),480);
+  next.classList.add('active');
+
+  // bottom nav
+  if(navPages.includes(pageId)){
+    bottomNavEl.classList.add('visible');
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    const target=document.getElementById('nav-'+pageId.replace('scanner','scan').replace('music','music'));
+    if(target)target.classList.add('active');
+  }else{
+    bottomNavEl.classList.remove('visible');
+  }
+
+  // trigger stagger on new page
+  const stagger=next.querySelector('.anim-stagger');
+  if(stagger){
+    stagger.querySelectorAll(':scope > *').forEach(el=>{
+      el.style.opacity='0';el.style.animation='none';
+      void el.offsetHeight;
+      el.style.animation='';
+    });
+  }
+}
+
+/* ════════════════════════════════
+   AUTH
+════════════════════════════════ */
+function handleLogin(){
+  const email=document.getElementById('login-email').value;
+  const pw=document.getElementById('login-pw').value;
+  if(!email||!pw){showToast('Please fill in all fields');return;}
+  showToast('Signing you in...');
+  setTimeout(()=>navigate('onboard'),800);
+}
+
+function togglePw(id,eye){
+  const inp=document.getElementById(id);
+  if(inp.type==='password'){inp.type='text';eye.textContent='visibility_off'}
+  else{inp.type='password';eye.textContent='visibility'}
+}
+
+function updateStrength(val){
+  const bars=document.querySelectorAll('#strength-bar span');
+  bars.forEach(b=>{b.className='';});
+  if(val.length===0)return;
+  let score=0;
+  if(val.length>=8)score++;
+  if(/[A-Z]/.test(val))score++;
+  if(/[0-9]/.test(val))score++;
+  if(/[^A-Za-z0-9]/.test(val))score++;
+  const cl=score<=1?'active-w':score<=2?'active-m':'active-s';
+  for(let i=0;i<score;i++)bars[i].className=cl;
+}
+
+/* ════════════════════════════════
+   ONBOARDING
+════════════════════════════════ */
+let slide=0;
+function goSlide(n){
+  slide=n;
+  document.getElementById('onboard-slides').style.transform=`translateX(-${n*100/3}%)`;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===n));
+  const btn=document.getElementById('onboard-btn');
+  btn.innerHTML=n===2?
+    '<span class="material-symbols-outlined fill1">auto_awesome</span> Start Scanning <span class="material-symbols-outlined">arrow_forward</span>':
+    'Continue <span class="material-symbols-outlined">arrow_forward</span>';
+}
+function onboardNext(){
+  if(slide<2){goSlide(slide+1)}
+  else{navigate('scanner')}
+}
+
+/* ════════════════════════════════
+   MUSIC
+════════════════════════════════ */
+const tracks=[
+  {id:1,title:'Blinding Lights',artist:'The Weeknd',duration:'4:02',mood:'upbeat',emoji:'🌅',color:'#ff2d78'},
+  {id:2,title:'Levitating',artist:'Dua Lipa',duration:'3:24',mood:'upbeat',emoji:'✨',color:'#bf5fff'},
+  {id:3,title:'Happy',artist:'Pharrell Williams',duration:'3:53',mood:'upbeat',emoji:'😊',color:'#ffb347'},
+  {id:4,title:'Good as Hell',artist:'Lizzo',duration:'2:39',mood:'energy',emoji:'⚡',color:'#ff2d78'},
+  {id:5,title:'Can\'t Stop the Feeling',artist:'Justin Timberlake',duration:'3:56',mood:'upbeat',emoji:'🕺',color:'#00e5ff'},
+  {id:6,title:'Sunflower',artist:'Post Malone',duration:'2:38',mood:'chill',emoji:'🌻',color:'#ffb347'},
+  {id:7,title:'Watermelon Sugar',artist:'Harry Styles',duration:'2:54',mood:'chill',emoji:'🍉',color:'#00f5a0'},
+  {id:8,title:'Lo-Fi Study Beats',artist:'Chillhop Music',duration:'3:12',mood:'focus',emoji:'🎧',color:'#bf5fff'},
+  {id:9,title:'Electric Feel',artist:'MGMT',duration:'3:49',mood:'energy',emoji:'⚡',color:'#00e5ff'},
+  {id:10,title:'Midnight City',artist:'M83',duration:'4:03',mood:'focus',emoji:'🌃',color:'#bf5fff'},
+];
+
+let currentTrack=0;
+let playing=true;
+let likedTracks=new Set();
+let activeMood='all';
+let progressInterval;
+
+function renderTracks(filter){
+  const list=document.getElementById('track-list');
+  if(!list)return;
+  const filtered=filter==='all'?tracks:tracks.filter(t=>t.mood===filter);
+  list.innerHTML=filtered.map((t,i)=>`
+    <div class="track-item${t.id===tracks[currentTrack].id?' active':''}" onclick="selectTrack(${t.id-1})">
+      <div class="track-num">${t.id===tracks[currentTrack].id?'<span class="material-symbols-outlined fill1" style="color:var(--cyan);font-size:18px">graphic_eq</span>':(i+1)}</div>
+      <div class="track-art">
+        <div class="track-art-bg" style="background:${t.color}22">${t.emoji}</div>
+      </div>
+      <div class="track-info">
+        <div class="track-title" style="${t.id===tracks[currentTrack].id?'color:var(--cyan)':''}">${t.title}</div>
+        <div class="track-artist">${t.artist}</div>
+      </div>
+      <div class="track-dur">${t.duration}</div>
+      <div class="track-like${likedTracks.has(t.id)?' liked':''}" onclick="event.stopPropagation();toggleLike(${t.id})">
+        <span class="material-symbols-outlined${likedTracks.has(t.id)?' fill1':''}">favorite</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectTrack(idx){
+  currentTrack=idx;
+  const t=tracks[idx];
+  document.getElementById('np-hero-title').textContent=t.title;
+  document.getElementById('np-hero-artist').textContent=`${t.artist} · ${t.mood.charAt(0).toUpperCase()+t.mood.slice(1)}`;
+  document.getElementById('np-title-small').textContent=t.title;
+  document.getElementById('np-artist-small').textContent=t.artist;
+  document.getElementById('time-tot').textContent=t.duration;
+  resetProgress();
+  renderTracks(activeMood);
+}
+
+function prevTrack(){
+  currentTrack=(currentTrack-1+tracks.length)%tracks.length;
+  selectTrack(currentTrack);
+}
+function nextTrack(){
+  currentTrack=(currentTrack+1)%tracks.length;
+  selectTrack(currentTrack);
+}
+
+let playPct=35;
+function resetProgress(){playPct=0;updateProgressUI()}
+function updateProgressUI(){
+  const fill=document.getElementById('progress-fill');
+  const cur=document.getElementById('time-cur');
+  if(fill)fill.style.width=playPct+'%';
+  const totalSec=parseTime(tracks[currentTrack].duration);
+  const curSec=Math.floor((playPct/100)*totalSec);
+  if(cur)cur.textContent=formatTime(curSec);
+}
+function parseTime(s){const[m,sec]=s.split(':').map(Number);return m*60+sec}
+function formatTime(s){return`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}
+
+function togglePlay(){
+  playing=!playing;
+  const btn=document.getElementById('play-btn');
+  if(btn)btn.querySelector('span').textContent=playing?'pause':'play_arrow';
+}
+
+// auto-progress simulation
+setInterval(()=>{
+  if(playing&&document.getElementById('page-music').classList.contains('active')){
+    playPct=Math.min(100,playPct+0.15);
+    updateProgressUI();
+    if(playPct>=100){nextTrack();playPct=0}
+  }
+},100);
+
+function filterMood(el,mood){
+  activeMood=mood;
+  document.querySelectorAll('.mood-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderTracks(mood);
+}
+
+function toggleLike(id){
+  if(likedTracks.has(id)){likedTracks.delete(id);showToast('Removed from favourites')}
+  else{likedTracks.add(id);showToast('Added to favourites ❤️')}
+  renderTracks(activeMood);
+}
+
+// init music page on first load
+setTimeout(()=>{
+  playPct=35;
+  renderTracks('all');
+  updateProgressUI();
+},200);
+
+/* ════════════════════════════════
+   TOAST
+════════════════════════════════ */
+let toastTimer;
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2500);
+}
+</script>
+</body>
+</html>
